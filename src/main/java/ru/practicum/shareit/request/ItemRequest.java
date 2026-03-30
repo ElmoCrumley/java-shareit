@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequest {
     Long userId;
-    @Size(max = 100, message = "Максимальная длина описания — 100 символов")
+    @Size(max = 100, message = "Максимальная длина имени — 100 символов")
     String name;
     Long userRespondId;
 }

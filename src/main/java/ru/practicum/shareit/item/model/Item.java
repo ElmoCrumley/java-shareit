@@ -15,7 +15,7 @@ public class Item {
     Long id;
     Long userId;
     @NotBlank(message = "Поле должно быть заполнено")
-    @Size(max = 100, message = "Максимальная длина описания — 100 символов")
+    @Size(max = 100, message = "Максимальная длина имени — 100 символов")
     String name;
     @Size(max = 600, message = "Максимальная длина описания — 600 символов")
     String description;
