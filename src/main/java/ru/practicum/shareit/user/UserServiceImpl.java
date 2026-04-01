@@ -20,8 +20,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> create(User user) {
         try {
-            if (user.getEmail().isEmpty()) {
-                throw new BadDataBody("Empty email in the body`s request");
+            String email = user.getEmail();
+
+            if (email == null || email.isEmpty()) {
+                throw new BadDataBody("Empty email in the body's request");
             } else if (userRepository.findByEmail(user.getEmail()).isPresent()) {
                 throw new Conflict("This email is already exist");
             }
