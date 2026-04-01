@@ -70,9 +70,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(User user) {
+    public void delete(Long userId) {
         try {
-            userRepository.delete(user);
+            userRepository.delete(userId);
         } catch (Exception e) {
             throw new InternalServerError("An unexpected error occurred on the server");
         }

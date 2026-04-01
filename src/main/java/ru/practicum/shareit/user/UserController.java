@@ -30,10 +30,10 @@ public class UserController {
         return userService.findAll();
     }
 
-    @GetMapping
+    @GetMapping(value = "/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<User> findById(@RequestHeader("X-Sharer-User-Id") Long id) {
-        return userService.findById(id);
+    public Optional<User> findById(@PathVariable Long userId) {
+        return userService.findById(userId);
     }
 
     @PutMapping
@@ -42,9 +42,9 @@ public class UserController {
         return userService.update(user);
     }
 
-    @DeleteMapping
+    @DeleteMapping(value = "/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody User user) {
-        userService.delete(user);
+    public void delete(@PathVariable Long userId) {
+        userService.delete(userId);
     }
 }
