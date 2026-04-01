@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
         try {
             if (user.getEmail().isEmpty()) {
                 throw new BadDataBody("Empty email in the body`s request");
-            } else if (userRepository.findByEmail(user.getEmail()).isEmpty()) {
+            } else if (userRepository.findByEmail(user.getEmail()).isPresent()) {
                 throw new Conflict("This email is already exist");
             }
 
