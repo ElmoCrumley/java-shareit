@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.BadDataBody;
 import ru.practicum.shareit.exception.Conflict;
 import ru.practicum.shareit.exception.InternalServerError;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -20,7 +21,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> create(User user) {
         try {
             if (user.getEmail().isEmpty()) {
-                throw new NotFoundException("Empty email in the body`s request");
+                throw new BadDataBody("Empty email in the body`s request");
             } else if (userRepository.findByEmail(user.getEmail()).isEmpty()) {
                 throw new Conflict("This email is already exist");
             }
