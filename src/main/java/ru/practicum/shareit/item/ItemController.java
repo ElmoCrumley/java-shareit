@@ -22,7 +22,7 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Optional<ItemDto> create(
+    public Optional<Item> create(
             @RequestHeader("X-Sharer-User-Id") Long userId,
             @RequestBody ItemDto itemDto
     ) {
@@ -31,7 +31,7 @@ public class ItemController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<ItemDto> findAll(
+    public Collection<Item> findAll(
             @RequestHeader("X-Sharer-User-Id") Long userId
     ) {
         return itemService.findAll(userId);
@@ -39,28 +39,29 @@ public class ItemController {
 
     @GetMapping(value = "/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<ItemDto> findById(
+    public Optional<Item> findById(
             @RequestHeader("X-Sharer-User-Id") Long userId,
             @PathVariable Long itemId
     ) {
         return itemService.findById(userId, itemId);
     }
 
-    @PatchMapping
+    @PatchMapping(value = "/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<ItemDto> update(
+    public Optional<Item> update(
             @RequestHeader("X-Sharer-User-Id") Long userId,
-            @RequestBody ItemDto itemDto
+            @RequestBody ItemDto itemDto,
+            @PathVariable Long itemId
     ) {
-        return itemService.update(userId, itemDto);
+        return itemService.update(userId, itemDto, itemId);
     }
 
-    @GetMapping(value = "/search?text={text}")
+    @GetMapping(value = "/search")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<ItemDto> search(
+    public Collection<Item> search(
             @RequestHeader("X-Sharer-User-Id") Long userId,
-            @PathVariable String text
+            @RequestParam(name = "text") String searchString
     ) {
-        return itemService.search(userId, text);
+        return itemService.search(userId, searchString);
     }
 }
