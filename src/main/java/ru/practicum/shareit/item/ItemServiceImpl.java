@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 @Service
-public class ItemServiceImpl implements ItemService{
+public class ItemServiceImpl implements ItemService {
     ItemRepository itemRepository;
     UserRepository userRepository;
 
