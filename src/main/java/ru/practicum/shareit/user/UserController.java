@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Optional<User> create(@RequestBody User user) {
+    public Optional<User> create(@Valid @RequestBody User user) {
         return userService.create(user);
     }
 
@@ -36,10 +37,13 @@ public class UserController {
         return userService.findById(userId);
     }
 
-    @PutMapping
+    @PatchMapping(value = "/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<User> update(@RequestBody User user) {
-        return userService.update(user);
+    public Optional<User> update(
+            @PathVariable Long userId,
+            @Valid @RequestBody User user
+    ) {
+        return userService.update(userId, user);
     }
 
     @DeleteMapping(value = "/{userId}")
