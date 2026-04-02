@@ -12,7 +12,7 @@ public interface UserRepository {
 
     Optional<User> findByEmail(String userEmail);
 
-    Optional<User> update(User user);
+    Optional<User> update(Long userId, User user);
 
     void delete(Long userId);
 }
