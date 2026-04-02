@@ -22,15 +22,16 @@ public class UserServiceImpl implements UserService {
         try {
             String email = user.getEmail();
 
-            if (email == null || email.isEmpty()) {
+            if (email == null || email.isEmpty())
                 throw new BadDataBody("Empty email in the body's request");
-            } else if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            if (userRepository.findByEmail(user.getEmail()).isPresent())
                 throw new Conflict("This email is already exist");
-            }
 
             return userRepository.create(user);
+        } catch (BadDataBody | Conflict e) {
+            throw e;
         } catch (Exception e) {
-            throw new InternalServerError("An unexpected error occurred on the server");
+            throw new InternalServerError(e.getMessage());
         }
     }
 
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
         try {
             return userRepository.findAll();
         } catch (Exception e) {
-            throw new InternalServerError("An unexpected error occurred on the server");
+            throw new InternalServerError(e.getMessage());
         }
     }
 
@@ -48,26 +49,29 @@ public class UserServiceImpl implements UserService {
         try {
             Optional<User> user = userRepository.findById(userId);
 
-            if (user.isEmpty()) {
-                throw new NotFoundException("User is not found");
-            } else {
-                return user;
-            }
+            if (user.isEmpty()) throw new NotFoundException("User is not found");
+            return user;
+        } catch (NotFoundException e) {
+            throw e;
         } catch (Exception e) {
-            throw new InternalServerError("An unexpected error occurred on the server");
+            throw new InternalServerError(e.getMessage());
         }
     }
 
     @Override
-    public Optional<User> update(User user) {
+    public Optional<User> update(Long userId, User user) {
         try {
-            if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            if (userRepository.findByEmail(user.getEmail()).isPresent())
                 throw new Conflict("This email is already exist");
-            }
 
-            return userRepository.update(user);
+            Optional<User> storageUser = userRepository.update(userId, user);
+
+            if (storageUser.isEmpty()) throw new NotFoundException("User is not found");
+            return storageUser;
+        } catch (Conflict | NotFoundException e) {
+            throw e;
         } catch (Exception e) {
-            throw new InternalServerError("An unexpected error occurred on the server");
+            throw new InternalServerError(e.getMessage());
         }
     }
 
@@ -76,7 +80,7 @@ public class UserServiceImpl implements UserService {
         try {
             userRepository.delete(userId);
         } catch (Exception e) {
-            throw new InternalServerError("An unexpected error occurred on the server");
+            throw new InternalServerError(e.getMessage());
         }
     }
 }
