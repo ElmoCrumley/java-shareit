@@ -1,9 +1,11 @@
 package ru.practicum.shareit.user;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+@Slf4j
 @Repository
 public class UserRepositoryImpl implements UserRepository {
     private final Map<Long, User> users = new HashMap<>();
@@ -28,7 +30,8 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<User> findByEmail(String userEmail) {
         for (User user : users.values()) {
-            if (user.getEmail().equals(userEmail)) {
+            String email = user.getEmail();
+            if (email != null && email.equals(userEmail)) {
                 return Optional.of(user);
             }
         }
@@ -37,18 +40,14 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> update(User user) {
-        for (User storageUser : users.values()) {
-            if (user.getId().equals(storageUser.getId())) {
-                storageUser.setEmail(user.getEmail());
-                storageUser.setName(user.getName());
-                storageUser.setLogin(user.getLogin());
-            }
+    public Optional<User> update(Long userId, User user) {
+        User storageUser = users.get(userId);
+        if (storageUser == null) return Optional.empty();
 
-            return Optional.of(storageUser);
-        }
-
-        return Optional.empty();
+        storageUser.setEmail(user.getEmail());
+        storageUser.setName(user.getName());
+        storageUser.setLogin(user.getLogin());
+        return Optional.of(storageUser);
     }
 
     @Override
