@@ -15,6 +15,7 @@ import java.util.Optional;
 @RequestMapping("/items")
 public class ItemController {
     ItemService itemService;
+    public static final String SHARER_USER_ID = "X-Sharer-User-Id";
 
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
@@ -23,7 +24,7 @@ public class ItemController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Optional<Item> create(
-            @RequestHeader("X-Sharer-User-Id") Long userId,
+            @RequestHeader(SHARER_USER_ID) Long userId,
             @RequestBody ItemDto itemDto
     ) {
         return itemService.create(userId, itemDto);
@@ -32,7 +33,7 @@ public class ItemController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Collection<Item> findAll(
-            @RequestHeader("X-Sharer-User-Id") Long userId
+            @RequestHeader(SHARER_USER_ID) Long userId
     ) {
         return itemService.findAll(userId);
     }
@@ -40,7 +41,7 @@ public class ItemController {
     @GetMapping(value = "/{itemId}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<Item> findById(
-            @RequestHeader("X-Sharer-User-Id") Long userId,
+            @RequestHeader(SHARER_USER_ID) Long userId,
             @PathVariable Long itemId
     ) {
         return itemService.findById(userId, itemId);
@@ -49,7 +50,7 @@ public class ItemController {
     @PatchMapping(value = "/{itemId}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<Item> update(
-            @RequestHeader("X-Sharer-User-Id") Long userId,
+            @RequestHeader(SHARER_USER_ID) Long userId,
             @RequestBody ItemDto itemDto,
             @PathVariable Long itemId
     ) {
@@ -59,7 +60,7 @@ public class ItemController {
     @GetMapping(value = "/search")
     @ResponseStatus(HttpStatus.OK)
     public Collection<Item> search(
-            @RequestHeader("X-Sharer-User-Id") Long userId,
+            @RequestHeader(SHARER_USER_ID) Long userId,
             @RequestParam(name = "text") String searchString
     ) {
         return itemService.search(userId, searchString);
