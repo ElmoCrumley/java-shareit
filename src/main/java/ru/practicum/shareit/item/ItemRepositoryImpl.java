@@ -12,16 +12,16 @@ public class ItemRepositoryImpl implements ItemRepository {
     private final Map<Long, Item> items = new HashMap<>();
 
     @Override
-    public Optional<Item> create(Long userId, ItemDto itemDto) {
-        Item item = new Item();
+    public Optional<Item> create(Long userId, Item item) {
+        Item responseIitem = new Item();
 
-        item.setId(getNextId());
-        item.setName(itemDto.getName());
-        item.setDescription(itemDto.getDescription());
-        item.setAvailable(itemDto.getAvailable());
-        item.setUserId(userId);
-        items.put(item.getId(), item);
-        return Optional.of(item);
+        responseIitem.setId(getNextId());
+        responseIitem.setName(item.getName());
+        responseIitem.setDescription(item.getDescription());
+        responseIitem.setAvailable(item.getAvailable());
+        responseIitem.setUserId(userId);
+        items.put(responseIitem.getId(), responseIitem);
+        return Optional.of(responseIitem);
     }
 
     @Override

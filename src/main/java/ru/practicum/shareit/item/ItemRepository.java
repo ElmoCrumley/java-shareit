@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface ItemRepository {
-    Optional<Item> create(Long userId, ItemDto itemDto);
+    Optional<Item> create(Long userId, Item item);
 
     Collection<ItemDto> findAll(Long userId);
 

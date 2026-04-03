@@ -26,9 +26,9 @@ public class ItemController {
     @ResponseStatus(HttpStatus.CREATED)
     public ItemDto create(
             @RequestHeader(SHARER_USER_ID) Long userId,
-            @RequestBody @Valid ItemDto itemDto
+            @RequestBody @Valid Item item
     ) {
-        return itemService.create(userId, itemDto);
+        return itemService.create(userId, item);
     }
 
     @GetMapping

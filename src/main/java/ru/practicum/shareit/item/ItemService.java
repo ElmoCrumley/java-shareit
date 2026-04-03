@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface ItemService {
-    ItemDto create(Long userId, ItemDto itemDto);
+    ItemDto create(Long userId, Item item);
 
     Collection<ItemDto> findAll(Long userId);
 

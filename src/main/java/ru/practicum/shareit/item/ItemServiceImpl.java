@@ -26,11 +26,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto create(Long userId, ItemDto itemDto) {
+    public ItemDto create(Long userId, Item item) {
         try {
-            Boolean isAvailable = itemDto.getAvailable();
-            String name = itemDto.getName();
-            String description = itemDto.getDescription();
+            Boolean isAvailable = item.getAvailable();
+            String name = item.getName();
+            String description = item.getDescription();
             Optional<User> user = userRepository.findById(userId);
 
             if (userId == null) {
@@ -45,10 +45,10 @@ public class ItemServiceImpl implements ItemService {
                 throw new BadDataBody("Item doesn't have a description");
             }
 
-            Optional<Item> item = itemRepository.create(userId, itemDto);
+            Optional<Item> storageItem = itemRepository.create(userId, item);
 
-            if (item.isPresent()) {
-                return ItemMapper.toDtoItem(item.get());
+            if (storageItem.isPresent()) {
+                return ItemMapper.toDtoItem(storageItem.get());
             } else {
                 throw new ItemCreationException("Item can't be created");
             }
