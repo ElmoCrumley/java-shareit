@@ -23,7 +23,7 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Optional<Item> create(
+    public ItemDto create(
             @RequestHeader(SHARER_USER_ID) Long userId,
             @RequestBody ItemDto itemDto
     ) {
@@ -32,7 +32,7 @@ public class ItemController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Item> findAll(
+    public Collection<ItemDto> findAll(
             @RequestHeader(SHARER_USER_ID) Long userId
     ) {
         return itemService.findAll(userId);
@@ -40,7 +40,7 @@ public class ItemController {
 
     @GetMapping(value = "/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Item> findById(
+    public ItemDto findById(
             @RequestHeader(SHARER_USER_ID) Long userId,
             @PathVariable Long itemId
     ) {
@@ -49,7 +49,7 @@ public class ItemController {
 
     @PatchMapping(value = "/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Item> update(
+    public ItemDto update(
             @RequestHeader(SHARER_USER_ID) Long userId,
             @RequestBody ItemDto itemDto,
             @PathVariable Long itemId
@@ -59,7 +59,7 @@ public class ItemController {
 
     @GetMapping(value = "/search")
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Item> search(
+    public Collection<ItemDto> search(
             @RequestHeader(SHARER_USER_ID) Long userId,
             @RequestParam(name = "text") String searchString
     ) {

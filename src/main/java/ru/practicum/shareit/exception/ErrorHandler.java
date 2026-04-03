@@ -58,4 +58,16 @@ public class ErrorHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(body);
     }
+
+    @ExceptionHandler(ItemCreationException.class)
+    public ResponseEntity<Object> handleItemCreationException(ItemCreationException e) {
+        Map<String, Object> body = new HashMap<>();
+
+        body.put("error", e.getMessage());
+        body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body);
+    }
 }
