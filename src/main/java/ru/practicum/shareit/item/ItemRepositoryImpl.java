@@ -40,10 +40,14 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Optional<Item> update(Long userId, ItemDto itemDto, Long itemId) {
         Item storageItem = items.get(itemId);
+
         if (storageItem == null) return Optional.empty();
 
-        storageItem.setName(itemDto.getName());
-        storageItem.setDescription(itemDto.getDescription());
+        String name = itemDto.getName();
+        String description = itemDto.getDescription();
+
+        if (name != null) storageItem.setName(itemDto.getName());
+        if (description != null) storageItem.setDescription(itemDto.getDescription());
         storageItem.setAvailable(itemDto.getAvailable());
         return Optional.of(storageItem);
     }
