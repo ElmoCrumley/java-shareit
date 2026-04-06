@@ -1,18 +1,15 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.BadDataBody;
 import ru.practicum.shareit.exception.InternalServerError;
 import ru.practicum.shareit.exception.ItemCreationException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -28,23 +25,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto create(Long userId, Item item) {
         try {
-            Boolean isAvailable = item.getAvailable();
-            String name = item.getName();
-            String description = item.getDescription();
-            Optional<User> user = userRepository.findById(userId);
-
-            if (userId == null) {
-                throw new BadDataBody("The empty header userId");
-            } else if (user.isEmpty()) {
-                throw new NotFoundException("This user doesn't exist");
-            } else if (isAvailable == null) {
-                throw new BadDataBody("Item doesn't have an available");
-            } else if (name == null || name.isEmpty()) {
-                throw new BadDataBody("Item doesn't have a name");
-            } else if (description == null || description.isEmpty()) {
-                throw new BadDataBody("Item doesn't have a description");
-            }
-
             Optional<Item> storageItem = itemRepository.create(userId, item);
 
             if (storageItem.isPresent()) {
@@ -52,8 +32,6 @@ public class ItemServiceImpl implements ItemService {
             } else {
                 throw new ItemCreationException("Item can't be created");
             }
-        } catch (BadDataBody | NotFoundException e) {
-            throw e;
         } catch (Exception e) {
             throw new InternalServerError(e.getMessage());
         }
@@ -62,11 +40,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Collection<ItemDto> findAll(Long userId) {
         try {
-            if (userRepository.findById(userId).isEmpty()) throw new NotFoundException("This user doesn't exist");
-
-            return itemRepository.findAll(userId);
-        } catch (NotFoundException e) {
-            throw e;
+            return itemRepository.findAll(userId).stream()
+                    .filter(item -> item.getUserId().equals(userId))
+                    .map(ItemMapper::toDtoItem)
+                    .toList();
         } catch (Exception e) {
             throw new InternalServerError(e.getMessage());
         }
@@ -75,8 +52,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto findById(Long userId, Long itemId) {
         try {
-            if (userRepository.findById(userId).isEmpty()) throw new NotFoundException("This user doesn't exist");
-
             Optional<Item> item = itemRepository.findById(userId, itemId);
 
             if (item.isPresent()) {
@@ -94,8 +69,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto update(Long userId, ItemDto itemDto, Long itemId) {
         try {
-            if (userRepository.findById(userId).isEmpty()) throw new NotFoundException("This user doesn't exist");
-
             Optional<Item> item = itemRepository.update(userId, itemDto, itemId);
 
             if (item.isPresent()) {
@@ -110,18 +83,20 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    @Override
     public Collection<ItemDto> search(Long userId, String text) {
         try {
-            if (userRepository.findById(userId).isEmpty()) {
-                throw new NotFoundException("This user doesn't exist");
-            } else if (text.isEmpty()) {
-                return Collections.emptyList();
-            }
-
-            return itemRepository.search(userId, text);
-        } catch (NotFoundException e) {
-            throw e;
+            return itemRepository.findAll(userId).stream()
+                    .filter(item -> Optional.ofNullable(item.getAvailable()).orElse(false)
+                                    && (Optional.ofNullable(item.getName())
+                                    .map(name -> name.toLowerCase().contains(text.toLowerCase()))
+                                    .orElse(false)
+                                    || Optional.ofNullable(item.getDescription())
+                                    .map(name -> name.toLowerCase().contains(text.toLowerCase()))
+                                    .orElse(false)
+                            )
+                    )
+                    .map(ItemMapper::toDtoItem)
+                    .toList();
         } catch (Exception e) {
             throw new InternalServerError(e.getMessage());
         }

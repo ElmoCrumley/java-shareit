@@ -2,7 +2,6 @@ package ru.practicum.shareit.item;
 
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.*;
@@ -25,11 +24,8 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Collection<ItemDto> findAll(Long userId) {
-        return items.values().stream()
-                .filter(item -> item.getUserId().equals(userId))
-                .map(ItemMapper::toDtoItem)
-                .toList();
+    public Collection<Item> findAll(Long userId) {
+        return items.values();
     }
 
     @Override
@@ -50,22 +46,6 @@ public class ItemRepositoryImpl implements ItemRepository {
         if (description != null) storageItem.setDescription(itemDto.getDescription());
         storageItem.setAvailable(itemDto.getAvailable());
         return Optional.of(storageItem);
-    }
-
-    @Override
-    public Collection<ItemDto> search(Long userId, String text) {
-        return items.values().stream()
-                .filter(item -> Optional.ofNullable(item.getAvailable()).orElse(false)
-                        && (Optional.ofNullable(item.getName())
-                                                .map(name -> name.toLowerCase().contains(text.toLowerCase()))
-                                                .orElse(false)
-                                || Optional.ofNullable(item.getDescription())
-                                                .map(name -> name.toLowerCase().contains(text.toLowerCase()))
-                                                .orElse(false)
-                        )
-                )
-                .map(ItemMapper::toDtoItem)
-                .toList();
     }
 
     private long getNextId() {

@@ -9,11 +9,9 @@ import java.util.Optional;
 public interface ItemRepository {
     Optional<Item> create(Long userId, Item item);
 
-    Collection<ItemDto> findAll(Long userId);
+    Collection<Item> findAll(Long userId);
 
     Optional<Item> findById(Long userId, Long itemId);
 
     Optional<Item> update(Long userId, ItemDto itemDto, Long itemId);
-
-    Collection<ItemDto> search(Long userId, String text);
 }
