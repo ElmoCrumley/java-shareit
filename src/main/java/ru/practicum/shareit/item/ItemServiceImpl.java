@@ -35,7 +35,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Collection<ItemDto> findAll(Long userId) {
         return itemRepository.findAll(userId).stream()
-                .filter(item -> item.getUserId().equals(userId))
+                .filter(item -> item.getUser().getId().equals(userId))
                 .map(ItemMapper::toDtoItem)
                 .toList();
     }
